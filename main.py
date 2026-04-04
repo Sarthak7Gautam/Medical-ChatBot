@@ -10,14 +10,13 @@ from langchain_core.output_parsers import StrOutputParser
 
 load_dotenv()
 
-
 def load_retriever():
 
     loader = PyPDFLoader(file_path="Medical_book.pdf")
 
     docs = loader.load()
 
-    splitter = RecursiveCharacterTextSplitter(chunk_size=1500, chunk_overlap=550)
+    splitter = RecursiveCharacterTextSplitter(chunk_size=2500, chunk_overlap=1200)
 
     text_chunks = splitter.split_documents(documents=docs)
 
@@ -92,17 +91,3 @@ def get_response(question: str, retriever, model, chat_history: list[dict]):
     chain = build_chain(retriever=retriever, model=model, chat_history=chat_history)
     return chain.invoke(question)
 
-
-retriver = load_retriever()
-model = load_model()
-chat_history = []
-
-while True:
-    question = input("You :")
-    if question.lower() == "exit":
-        break
-
-    answer = get_response(question, retriver, model, chat_history)
-
-    print(f"Assistant : {answer}\n")
-    chat_history.append({"user": question, "assistant": answer})
